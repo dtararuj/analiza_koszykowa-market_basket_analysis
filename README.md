@@ -1,6 +1,6 @@
 # analiza_koszykowa2019
 
-Skrypty przedstawiaja narzedzia potrzebne do przeprowadzenia analizy koszykowej w sieci sklepow detalicznych
+Skrypty przedstawiaja narzedzia potrzebne do przeprowadzenia analizy koszykowej w sieci sklepow detalicznych za rok 2019
 - pierwszy plik to narzedzie do przetworzenia danych potrzebnych do uruchomienia skryptu,
 - drugi plik to skrypt własciwy.
 
