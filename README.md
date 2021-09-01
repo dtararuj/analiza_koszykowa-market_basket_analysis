@@ -6,7 +6,8 @@ Skrypty przedstawiaja narzedzia potrzebne do przeprowadzenia analizy koszykowej 
 
 Poniżej przykładowe (wygenerowane w sposób losowy) dane jakie uzyskujemy:
 
-a) wykres czestosci danego asortymentu we wszystkich paragonach spelniajacych kryterium analizy (tj. gdzie sa min. 2 transakcje)
+a) wykres czestosci danego asortymentu we wszystkich paragonach spelniajacych kryterium analizy (tj. gdzie sa min. 2 transakcje)  
+
 ![nazwa](https://raw.githubusercontent.com/dtararuj/analiza_koszykowa2019/master/obrazki/item1.jpg)
 
 b) zestawienie kilku przykladowych reguł (x i y - to nazwy grup, ze wzgledu na poufnosc danych sa one ukryte)
@@ -23,3 +24,9 @@ b) zestawienie kilku przykladowych reguł (x i y - to nazwy grup, ze wzgledu na 
 
 c) wykres prezentujace dwie glowne reguly, ktore wyklarowaly sie podczas analizy. 
 ![nazwa](https://raw.githubusercontent.com/dtararuj/analiza_koszykowa2019/master/obrazki/item2.jpg)
+
+
+Dzieki takiej wiedzy moze podejmowac swiadome decyzje o:
+- kszatlcie promocji (jaki produkt ze soba laczyc),
+- sposobie ekspozycji produktow na sklepach,
+- szkoleniu sprzedawcow, w celu maksymalizacji koszyka zakupowego.
