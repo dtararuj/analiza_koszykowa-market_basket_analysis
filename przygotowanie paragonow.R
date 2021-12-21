@@ -1,43 +1,38 @@
-#skrypt do przygotowania danych paragonowych, z dostepnych danych surowych
+# skrypt do przygotowania danych paragonowych, z dostepnych danych surowych
 
+renv::init()
 
-setwd("G:/studia/AI/apriori2019")
 library(tidyverse)
-
-#pobieranie danych surowych za dostepne lata
-read.csv2("2019.csv",encoding="UTF-8",quote="")->X2019
-read.csv2("Paragony 2018.csv",encoding="UTF-8",quote="")->X2018
-read.csv2("Paragony 2017.csv",encoding="UTF-8",quote="")->X2017
-
-#polaczenie danych w jedno
-rbind(select(X2017, 5,6,8),select(X2018, 5,6,8),select(X2019, 5,6,8))->lista
-
-#zmiana nazwy kolumn
-colnames(lista)=c("PARAGON.NR","KOD.PRODUKTU","ILOSC")
-
-#gdy chcemy filtrowaæ miesiace i robic szczegolowa analize dla danego okresu
-#rbind(select(X2017,1, 5,6,8),select(X2018,1, 5,6,8),select(X2019, 1,5,6,8))->lista
-## lista %>% separate(DATA, into=c("rok","miesi¹c","dzieñ"), sep="-") %>% filter(miesi¹c %in% c("08","09")) %>% select(4,5,6) -> lista
-
-#trzeba jeszcze odfiltrowaæ reklamowki
-lista[-grep(pattern="^KS", lista$KOD.PRODUKTU),]->new
-
-#duplikowane paragnów po ilosci sztuk danego indeksu
-new[rep(rownames(new), new$ILOSC),]  ->lista1 
-
-#wybierz 1. z tych metod do pobrania kartoteki, w zaleznosci od wersji danych surowych
-read.csv2("lista_produktow_opis.csv", sep="\t",encoding="UTF-8",quote="")->opis
-
-## read.csv2("lista_produktow_opis.csv", sep=";",encoding="UTF-8",quote="")->opis
-## read_delim("lista_produktow_opis.csv", delim=";",encoding="UTF-8",quote="")->opis
-## read_delim("lista_produktow_opis.csv", delim=";")->opis
+library(readxl)
 
 
-select(opis,1,ncol(opis)-3,ncol(opis)-4) %>% unite(Kategoria,Departament, Grupa, sep=": ")->opis1
+# pobieranie danych surowych za dostepne lata
+dane = NULL
+for (i in list.files("dane_surowe")){
+  x = read.csv2(file.path("dane_surowe",i),) %>% select(Data = 1, NrParagonu =5 ,KodProduktu = 6, Ilosc = 8) 
+  dane = bind_rows(x, dane)
+}
 
+# typowanie paragonow z min 2 szt.
+ile_sztuk = dane %>% group_by(NrParagonu) %>% summarise(suma = sum(Ilosc))
+wielosztuki = dane %>% left_join(ile_sztuk, by = "NrParagonu") %>% filter(suma > 1) %>% select(-suma)
 
-#gotowe dane pod apriori
-left_join(lista1,opis1, by=c("KOD.PRODUKTU"=colnames(opis1)[1])) %>% select(-2,-3) -> paragony 
+# duplikowane paragnow ze wzgledu na ilosc szt danego indeksu
+dane1 = uncount(wielosztuki, Ilosc)
 
-#zmieniamy tylko nazwy kolumn
-colnames(paragony)<-c("Paragon", "Produkt")
+# pobieranie danych o hierachii produktow
+hierarchia = read_xlsx("hierarchia_produktow/HierarchiaProd.xlsx",sheet = 'listaModeli') %>% select(KodProduktu = 2, Departament = 11,Grupa = 12)
+
+# wszystko z duzej
+hierarchia_1 = as.data.frame(sapply(hierarchia, toupper))
+
+# scalenie grupy i departamentu
+hierarchia_2 = hierarchia_1 %>% mutate(Produkt = paste(Departament, ": ", Grupa)) %>% select(-Departament, - Grupa)
+                        
+# polaczenie paragonow i hierarchii
+paragony_hierarchia = dane1 %>% left_join(hierarchia_2, by = "KodProduktu") %>% select(-KodProduktu)
+
+# zapisanie CSV - jako plik wsadowy do aplikacji
+write.csv(paragony_hierarchia, "paragony.csv",row.names = FALSE)
+
+renv::snapshot()

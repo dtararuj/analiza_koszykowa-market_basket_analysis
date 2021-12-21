@@ -108,7 +108,7 @@ inspect(head(XX.reguly))
 
 ##graficzne przedstawienie
 
-subRules<-reguly[quality(reguly)$confidence>0.4]
+subRules<-reguly[quality(reguly)$confidence>0.25]
 #wybór regu³ z prawdopodobieñstwem wy¿szym ni¿ 0.4
 
 ## wybór 10 najlepszych regu³ po prawdopodobieñstwie  
