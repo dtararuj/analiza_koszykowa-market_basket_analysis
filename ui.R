@@ -1,5 +1,6 @@
 library(shiny)
 ####daty tylko dostepne w pliku wsadowym !!
+### zalacz kilka plikow wsadowych
 
 shinyUI(fluidPage(
   titlePanel(title =h2("Analiza koszykowa", align ='center')),
@@ -44,7 +45,7 @@ shinyUI(fluidPage(
       # wybor ile regul ma wyswietlac
       numericInput("ilosc_regul",
                    "Ile regul wyswietlic:",
-                   value = 10),
+                   value = 5),
       
       # sposob sortowania regul
       selectInput("sortowanie",

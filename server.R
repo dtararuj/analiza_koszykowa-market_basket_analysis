@@ -75,7 +75,7 @@ reguly = reactive({
 
 # 5. Wybor najmocniejszych regul
 
-top_reguly = reactive({
+top_reguly = eventReactive(input$run, {
   
   # parametry wyboru regul
   by = input$sortowanie
@@ -89,11 +89,14 @@ top_reguly = reactive({
 # 6. Generacja wynikow
 # prezentacja najmocniejszych regul
 output$reguly = renderTable({
-  
-  inspect(top_reguly())
+  if (is.null(top_reguly())){
+    return()
+  }else{
+    inspect(top_reguly())
+  }
 })
 
-output$reguly_wykres = renderVisNetwork({
+output$reguly_wykres =  renderVisNetwork({
   plot(top_reguly(), method = "graph",  engine = "htmlwidget")
 })
 
