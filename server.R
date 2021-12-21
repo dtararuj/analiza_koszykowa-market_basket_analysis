@@ -44,6 +44,17 @@ transakcje = reactive({
   return (trans)
 })
 
+# 4. Lista rozwijana oparta na zaladowanym pliku z lista produktow
+output$produkt = renderUI({
+  
+  grupy = paragony_w_okresie() %>% select(Produkt = 3) %>% arrange(Produkt) %>% unique() %>% pull()
+  
+  selectInput("Produkt",
+              "Reguly dla wybranego produktu:",
+              choices = c("IGNORUJ",grupy),
+              selected = "IGNORUJ")
+})
+
 
 # 4.Wyznaczenie reguł asocjacyjnych (podobienstw)
 
@@ -52,9 +63,14 @@ reguly = reactive({
   support = input$support
   confidence = input$confidence
   
+  # co wybiera klient jako kolejny produktu w przypadku wyboru konkretnego produktu 
+  lhs = input$Produkt
   
-  apriori(transakcje(), parameter = list(supp=support, conf=confidence,minlen=2, maxlen=2))
-  
+  if (lhs =="IGNORUJ"){
+    apriori(transakcje(), parameter = list(supp=support, conf=confidence,minlen=2, maxlen=2))
+  } else {
+    apriori(transakcje(), parameter = list(supp=support, conf=confidence,minlen=2, maxlen=2), appearance = list(lhs= lhs))
+  }
 }) 
 
 # 5. Wybor najmocniejszych regul
@@ -70,9 +86,10 @@ top_reguly = reactive({
   
 })
 
-
+# 6. Generacja wynikow
 # prezentacja najmocniejszych regul
 output$reguly = renderTable({
+  
   inspect(top_reguly())
 })
 

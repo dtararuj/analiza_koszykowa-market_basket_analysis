@@ -1,5 +1,5 @@
 library(shiny)
-
+####daty tylko dostepne w pliku wsadowym !!
 
 shinyUI(fluidPage(
   titlePanel(title =h2("Analiza koszykowa", align ='center')),
@@ -13,11 +13,11 @@ shinyUI(fluidPage(
       # text pomocniczy
       helpText("Przeslij tylko paragony z min 2 szt.",
                br(),
-               "Wymagany format: Data, NrParagonu, Produkt"),
+               "Wymagany format: Data ('yyyy-mm-dd'), NrParagonu, Produkt"),
       
       # wybor zakresu dat
       dateRangeInput("daty",
-                     "Wybierz zakres dat", 
+                     "Wybierz zakres dat:", 
                      start = "2019-01-01",
                      end = NULL,
                      separator = " do ",
@@ -27,7 +27,7 @@ shinyUI(fluidPage(
       br(),
       # Wybor poziomu wsparcia reguly
       sliderInput("support",
-                  "Minimalny poziom wsparcia reguly",
+                  "Minimalny poziom wsparcia reguly:",
                   min = 0.0001,
                   max = 0.3,
                   value = 0.002,
@@ -35,7 +35,7 @@ shinyUI(fluidPage(
       
       # Wybor poziomu wsparcia reguly
       sliderInput("confidence",
-                  "Prawdop. dobrania jako druga szt.",
+                  "Prawdop. dobrania jako druga szt.:",
                   min = 0.1,
                   max = 1,
                   value = 0.3,
@@ -43,23 +43,30 @@ shinyUI(fluidPage(
       
       # wybor ile regul ma wyswietlac
       numericInput("ilosc_regul",
-                   "Ile regul wyswietlic",
+                   "Ile regul wyswietlic:",
                    value = 10),
       
       # sposob sortowania regul
       selectInput("sortowanie",
-                   "Sortowanie regul wg",
+                   "Sortowanie regul wg:",
                    c("confidence","lift","support"),
                    selected = "confidence"),
       
+      # pobranie produktow z zaladowanego pliku
+      uiOutput("produkt"),
       
       br(),
-      br(),
-      p("Parametry wykresu czestosci"),
+  
+      p("Parametry wykresu czestosci wystepowania:"),
       numericInput("TopN",
                    "Ilosc najpopularniejszych produktow",
                    value = 10),
+
+      # przycisk odswiezania raportu
+      actionButton("run",label = "odswiez"),
+      
       width = 3),
+    
     mainPanel(tabsetPanel(type="tabs",
                           tabPanel("Reguly", tableOutput("reguly"),
                                              visNetworkOutput("reguly_wykres")),
