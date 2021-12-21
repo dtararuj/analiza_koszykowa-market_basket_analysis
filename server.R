@@ -7,7 +7,7 @@ library(arules)
 library(arulesViz)
 library(visNetwork) #for html widget
 
-shinyServer(function(input, output){
+shinyServer(function(input, output, seasion){
 
 # 1. pobieranie danych uzytkownika
 zbior_paragonow = reactive({inFile <- input$paragony
@@ -45,14 +45,28 @@ transakcje = reactive({
 })
 
 # 4. Lista rozwijana oparta na zaladowanym pliku z lista produktow
-output$produkt = renderUI({
+
+# lista produktow
+grupy = eventReactive(input$run,{
   
   grupy = paragony_w_okresie() %>% select(Produkt = 3) %>% arrange(Produkt) %>% unique() %>% pull()
-  
-  selectInput("Produkt",
+})
+
+# stworzenie listy rozwijanej
+output$produkt = renderUI({
+
+  if(is.null(grupy())){
+    return()
+    
+  }else{
+    
+    #grupy = paragony_w_okresie() %>% select(Produkt = 3) %>% arrange(Produkt) %>% unique() %>% pull()
+    
+    selectInput("Produkt",
               "Reguly dla wybranego produktu:",
-              choices = c("IGNORUJ",grupy),
+              choices = c("IGNORUJ",grupy()),
               selected = "IGNORUJ")
+  }
 })
 
 
@@ -73,9 +87,9 @@ reguly = reactive({
   }
 }) 
 
-# 5. Wybor najmocniejszych regul
+# 5. Wybor najmocniejszych regul po kliknieciu w przycisk
 
-top_reguly = eventReactive(input$run, {
+top_reguly = eventReactive(input$run1, {
   
   # parametry wyboru regul
   by = input$sortowanie

@@ -11,6 +11,10 @@ shinyUI(fluidPage(
                 "Wgraj plik z lista paragonow", 
                 accept = ".csv"),  # moze multiplefile
       
+      # przyciski odswiezania raportu
+      actionButton("run",label = "Oblicz"),
+      actionButton("run1",label = "Wyswietl"),
+      
       # text pomocniczy
       helpText("Przeslij tylko paragony z min 2 szt.",
                br(),
@@ -62,10 +66,6 @@ shinyUI(fluidPage(
       numericInput("TopN",
                    "Ilosc najpopularniejszych produktow",
                    value = 10),
-
-      # przycisk odswiezania raportu
-      actionButton("run",label = "odswiez"),
-      
       width = 3),
     
     mainPanel(tabsetPanel(type="tabs",
