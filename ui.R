@@ -11,56 +11,42 @@ shinyUI(fluidPage(
       fileInput("paragony",
                 "Wgraj plik z lista paragonow", 
                 accept = ".csv"),  # moze multiplefile
+      # text pomocniczy
+      helpText("Przeslij tylko paragony z min 2 szt.",
+               br(),
+               "Wymagany format: Data ('yyyy-mm-dd'), NrParagonu, Produkt"),
       
       # przyciski odswiezania raportu
       actionButton("run",label = "Oblicz"),
       actionButton("run1",label = "Wyswietl"),
       
-      # text pomocniczy
-      helpText("Przeslij tylko paragony z min 2 szt.",
-               br(),
-               "Wymagany format: Data ('yyyy-mm-dd'), NrParagonu, Produkt"),
+      
       # zakres dat
       uiOutput("zakres_dat"),
       br(),
-      p(HTML("<b> Parametry tworzenia regul </b>")),
-      br(),
-      # Wybor poziomu wsparcia reguly
-      sliderInput("support",
-                  "Minimalny poziom wsparcia reguly:",
-                  min = 0.0001,
-                  max = 0.2,
-                  value = 0.002,
-                  step = 0.0001),
+      p(HTML("<b> PARAMETRY TWORZENIA REGUL: </b>")),
       
-      # Wybor poziomu wsparcia reguly
-      sliderInput("confidence",
-                  "Prawdop. dobrania jako druga szt.:",
-                  min = 0.1,
-                  max = 1,
-                  value = 0.3,
-                  step = 0.05),
+      # poziom wsparcia reguly
+      uiOutput("support"),
+      
+      # poziom confidence
+      uiOutput("confidence"),
       
       # wybor ile regul ma wyswietlac
-      numericInput("ilosc_regul",
-                   "Ile regul wyswietlic:",
-                   value = 5),
+      uiOutput("ilosc_regul"),
       
       # sposob sortowania regul
-      selectInput("sortowanie",
-                   "Sortowanie regul wg:",
-                   c("confidence","lift","support"),
-                   selected = "confidence"),
-      
+      uiOutput("sortowanie"),
+    
       # pobranie produktow z zaladowanego pliku
       uiOutput("produkt"),
       
       br(),
   
-      p("Parametry wykresu czestosci wystepowania:"),
-      numericInput("TopN",
-                   "Ilosc najpopularniejszych produktow",
-                   value = 10),
+      #p("Parametry wykresu czestosci wystepowania:"),
+      #numericInput("TopN",
+      #            "Ilosc najpopularniejszych produktow",
+      #             value = 15),
       width = 3),
     
     mainPanel(tabsetPanel(type="tabs",

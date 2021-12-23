@@ -18,13 +18,72 @@ zbior_paragonow = reactive({inFile <- input$paragony
 
 ##TODO Daj opcje kilku plikow
 
-# 2. wywiltrowanie wlasciwego zakresu
+# 2.Zdefiniowanie dynamicznych sliderow
 
-## zakres dat zalezny od daty wsadowych
+
+
+# Wybor poziomu wsparcia reguly
+output$support =  renderUI({
+  
+  if(is.null(zbior_paragonow())){
+    return()
+  }else{
+    sliderInput("support",
+            "Minimalny poziom wsparcia reguly:",
+            min = 0.0001,
+            max = 0.2,
+            value = 0.002,
+            step = 0.0001)
+  }
+})
+
+# wybor poziomu confidence
+output$confidence =  renderUI({
+  
+  if(is.null(zbior_paragonow())){
+    return()
+  }else{
+    sliderInput("confidence",
+                "Prawdop. dobrania jako druga szt.:",
+                min = 0.1,
+                max = 1,
+                value = 0.3,
+                step = 0.05)
+  }
+})
+
+# wybor ile regul ma wyswietlac
+output$ilosc_regul =  renderUI({
+  
+  if(is.null(zbior_paragonow())){
+    helpText(HTML("<i>Wgraj plik i kliknij Oblicz </i>")) 
+  }else{
+    numericInput("ilosc_regul",
+             "Ile regul wyswietlic:",
+             value = 5)
+  }
+})
+
+output$sortowanie =  renderUI({
+  
+  if(is.null(zbior_paragonow())){
+    return()
+  }else{
+    selectInput("sortowanie",
+            "Sortowanie regul wg:",
+            c("confidence","lift","support"),
+            selected = "confidence")
+  }
+})
+
+
+# 2. wywiltrowanie wlasciwego zakresu dat
+
+## zdefiniowane poczatku i konca osi czasu
 start = reactive({zbior_paragonow() %>% select(1) %>% pull() %>% min() })
 end   = reactive({zbior_paragonow() %>% select(1) %>% pull() %>% max() })
 
-# wybor zakresu dat dla filtru
+## dynamiczny filtr dat
 output$zakres_dat = renderUI({  
   
   if(is.null(zbior_paragonow())){
@@ -38,6 +97,7 @@ output$zakres_dat = renderUI({
                timeFormat = "%Y-%m-%d")
 }})
 
+## odfiltorowanie dat poza zakresem 
 paragony_w_okresie = reactive({
   start = as.character(input$daty[1])
   koniec = as.character(input$daty[2])
@@ -46,7 +106,6 @@ paragony_w_okresie = reactive({
 })
   
 # 3. przetworzenie danych do formatu zbioru transakcji
-
 
 transakcje = reactive({
 
@@ -73,9 +132,10 @@ grupy = eventReactive(input$run,{
 # stworzenie listy rozwijanej
 output$produkt = renderUI({
 
-  if(is.null(grupy())){
-    return()
-    
+  if(is.null(zbior_paragonow())){
+    return() 
+  }else if(is.null(grupy())){
+    helpText('Loading...')
   }else{
     
     selectInput("Produkt",
@@ -142,7 +202,8 @@ output$summary = renderPrint({
 # prezentacja czestotliwosci wystepowania (udzial danego produktu w calosci)
 output$frequency = renderPlot({
   
-  n = input$TopN
+  #n = input$TopN   #jezeli chcialbym udostepnic uzytkownikowi modyfikacje tego parametru
+  n = 15
   
   # ustawiamy marginesy
   #dev.off()
