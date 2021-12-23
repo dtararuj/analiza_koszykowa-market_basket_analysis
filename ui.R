@@ -1,6 +1,7 @@
 library(shiny)
 ####daty tylko dostepne w pliku wsadowym !!
 ### zalacz kilka plikow wsadowych
+### wez pokaz wszystkie przyciski dopiero jak sie zaladuja dane
 
 shinyUI(fluidPage(
   titlePanel(title =h2("Analiza koszykowa", align ='center')),
@@ -19,14 +20,8 @@ shinyUI(fluidPage(
       helpText("Przeslij tylko paragony z min 2 szt.",
                br(),
                "Wymagany format: Data ('yyyy-mm-dd'), NrParagonu, Produkt"),
-      
-      # wybor zakresu dat
-      dateRangeInput("daty",
-                     "Wybierz zakres dat:", 
-                     start = "2019-01-01",
-                     end = NULL,
-                     separator = " do ",
-                     width = '100%'),
+      # zakres dat
+      uiOutput("zakres_dat"),
       br(),
       p(HTML("<b> Parametry tworzenia regul </b>")),
       br(),
@@ -34,7 +29,7 @@ shinyUI(fluidPage(
       sliderInput("support",
                   "Minimalny poziom wsparcia reguly:",
                   min = 0.0001,
-                  max = 0.3,
+                  max = 0.2,
                   value = 0.002,
                   step = 0.0001),
       

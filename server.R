@@ -13,13 +13,31 @@ shinyServer(function(input, output, seasion){
 zbior_paragonow = reactive({inFile <- input$paragony
   if(is.null(inFile))
     return(NULL)
-  read.csv(inFile$datapath) %>% select(Data = 1, 2,3)
+  read.csv(inFile$datapath) %>% select(Data = 1, 2,3) %>% na.omit()
 })
 
 ##TODO Daj opcje kilku plikow
 
-
 # 2. wywiltrowanie wlasciwego zakresu
+
+## zakres dat zalezny od daty wsadowych
+start = reactive({zbior_paragonow() %>% select(1) %>% pull() %>% min() })
+end   = reactive({zbior_paragonow() %>% select(1) %>% pull() %>% max() })
+
+# wybor zakresu dat dla filtru
+output$zakres_dat = renderUI({  
+  
+  if(is.null(zbior_paragonow())){
+    return()
+  }else{
+  sliderInput("daty",
+               "Wybierz zakres dat:", 
+               min = as.Date(start(), "%Y-%m-%d"),
+               max = as.Date(end(), "%Y-%m-%d"),
+               value = c(as.Date(start()), as.Date(end())),
+               timeFormat = "%Y-%m-%d")
+}})
+
 paragony_w_okresie = reactive({
   start = as.character(input$daty[1])
   koniec = as.character(input$daty[2])
@@ -59,8 +77,6 @@ output$produkt = renderUI({
     return()
     
   }else{
-    
-    #grupy = paragony_w_okresie() %>% select(Produkt = 3) %>% arrange(Produkt) %>% unique() %>% pull()
     
     selectInput("Produkt",
               "Reguly dla wybranego produktu:",
@@ -118,6 +134,7 @@ output$reguly_wykres =  renderVisNetwork({
 # prezentacja wynikow summary zbioru paragonow
 output$summary = renderPrint({
   summary(transakcje())
+ 
   
 })
 
