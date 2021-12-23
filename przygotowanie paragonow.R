@@ -1,6 +1,8 @@
 # skrypt do przygotowania danych paragonowych, z dostepnych danych surowych
 
-renv::init()
+#renv::init()
+
+renv::restore()
 
 library(tidyverse)
 library(readxl)
@@ -35,4 +37,4 @@ paragony_hierarchia = dane1 %>% left_join(hierarchia_2, by = "KodProduktu") %>% 
 # zapisanie CSV - jako plik wsadowy do aplikacji
 write.csv(paragony_hierarchia, "paragony.csv",row.names = FALSE)
 
-renv::snapshot()
+#renv::snapshot()
