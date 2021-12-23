@@ -10,19 +10,33 @@ library(visNetwork) #for html widget
 shinyServer(function(input, output, seasion){
 
 # 1. pobieranie danych uzytkownika
-zbior_paragonow = reactive({inFile <- input$paragony
-  if(is.null(inFile))
+zbior_paragonow = reactive({
+  inFile <- input$paragony
+  
+  if(is.null(inFile)){
     return(NULL)
-  read.csv(inFile$datapath) %>% select(Data = 1, 2,3) %>% na.omit()
+    
+  }else{
+    
+  numfiles = nrow(inFile)
+  pliki = NULL
+  
+  for (i in 1:numfiles){
+    plik = read.csv(inFile[[i,'datapath']]) 
+    
+    if (ncol(plik) < 3){
+      plik = read.csv2(inFile[[i,'datapath']]) 
+    }
+    pliki = bind_rows(plik %>% select(Data = 1, 2,3) %>% na.omit(), pliki)
+    
+  return(pliki)
+  }}
 })
 
-##TODO Daj opcje kilku plikow
 
 # 2.Zdefiniowanie dynamicznych sliderow
 
-
-
-# Wybor poziomu wsparcia reguly
+## Wybor poziomu wsparcia reguly
 output$support =  renderUI({
   
   if(is.null(zbior_paragonow())){
@@ -37,7 +51,7 @@ output$support =  renderUI({
   }
 })
 
-# wybor poziomu confidence
+## wybor poziomu confidence
 output$confidence =  renderUI({
   
   if(is.null(zbior_paragonow())){
@@ -52,7 +66,7 @@ output$confidence =  renderUI({
   }
 })
 
-# wybor ile regul ma wyswietlac
+## wybor ile regul ma wyswietlac
 output$ilosc_regul =  renderUI({
   
   if(is.null(zbior_paragonow())){
@@ -64,6 +78,7 @@ output$ilosc_regul =  renderUI({
   }
 })
 
+## wybor sposobu sortowania regul
 output$sortowanie =  renderUI({
   
   if(is.null(zbior_paragonow())){
@@ -76,8 +91,7 @@ output$sortowanie =  renderUI({
   }
 })
 
-
-# 2. wywiltrowanie wlasciwego zakresu dat
+# 3. wywiltrowanie wlasciwego zakresu dat
 
 ## zdefiniowane poczatku i konca osi czasu
 start = reactive({zbior_paragonow() %>% select(1) %>% pull() %>% min() })
@@ -106,7 +120,6 @@ paragony_w_okresie = reactive({
 })
   
 # 3. przetworzenie danych do formatu zbioru transakcji
-
 transakcje = reactive({
 
   # usuniecie kolumny z data  
@@ -123,13 +136,13 @@ transakcje = reactive({
 
 # 4. Lista rozwijana oparta na zaladowanym pliku z lista produktow
 
-# lista produktow
+## lista dostepnych produktow
 grupy = eventReactive(input$run,{
   
   grupy = paragony_w_okresie() %>% select(Produkt = 3) %>% arrange(Produkt) %>% unique() %>% pull()
 })
 
-# stworzenie listy rozwijanej
+## stworzenie listy rozwijanej
 output$produkt = renderUI({
 
   if(is.null(zbior_paragonow())){
@@ -145,9 +158,7 @@ output$produkt = renderUI({
   }
 })
 
-
-# 4.Wyznaczenie reguł asocjacyjnych (podobienstw)
-
+# 5.Wyznaczenie reguł asocjacyjnych (podobienstw)
 reguly = reactive({
   
   support = input$support
@@ -163,8 +174,7 @@ reguly = reactive({
   }
 }) 
 
-# 5. Wybor najmocniejszych regul po kliknieciu w przycisk
-
+# 6. Wybor najmocniejszych regul po kliknieciu w przycisk
 top_reguly = eventReactive(input$run1, {
   
   # parametry wyboru regul
@@ -173,11 +183,11 @@ top_reguly = eventReactive(input$run1, {
   
   # odfiltrowany zbior regul
   head(reguly(), n, by = by)
-  
 })
 
 # 6. Generacja wynikow
-# prezentacja najmocniejszych regul
+
+## prezentacja najmocniejszych regul w formie tabeli i wykresu
 output$reguly = renderTable({
   if (is.null(top_reguly())){
     return()
@@ -191,13 +201,10 @@ output$reguly_wykres =  renderVisNetwork({
 })
 
 
-# prezentacja wynikow summary zbioru paragonow
+## prezentacja wynikow summary zbioru paragonow
 output$summary = renderPrint({
   summary(transakcje())
- 
-  
 })
-
 
 # prezentacja czestotliwosci wystepowania (udzial danego produktu w calosci)
 output$frequency = renderPlot({
@@ -217,8 +224,7 @@ output$frequency = renderPlot({
                     main="Popularnosc produktow")
 })
 
-
-# obsjasnienie pojec i hasel
+## obsjasnienie pojec i hasel
 output$Objasnienia = renderPrint({
   cat("Slowniczek pojec:", "\n",
       "# items - ilosc kategorii produktowych,", "\n", 
@@ -229,10 +235,7 @@ output$Objasnienia = renderPrint({
       "Mozemy mowic o zaleznosci jedynie przy lift > 1,", "\n",
       "# count - ilosc wystapien danej pary transakcji."
   )
-  
 })
-
-
 
 })
 

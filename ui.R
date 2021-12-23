@@ -1,17 +1,17 @@
 library(shiny)
-####daty tylko dostepne w pliku wsadowym !!
-### zalacz kilka plikow wsadowych
-### wez pokaz wszystkie przyciski dopiero jak sie zaladuja dane
 
 shinyUI(fluidPage(
   titlePanel(title =h2("Analiza koszykowa", align ='center')),
   sidebarLayout(
     sidebarPanel(
+      
       # wgrywanie pliku
       fileInput("paragony",
-                "Wgraj plik z lista paragonow", 
-                accept = ".csv"),  # moze multiplefile
-      # text pomocniczy
+                "Wgraj plik/i z lista paragonow", 
+                multiple = TRUE,
+                accept = ".csv"),  
+      
+      # tekst pomocniczy
       helpText("Przeslij tylko paragony z min 2 szt.",
                br(),
                "Wymagany format: Data ('yyyy-mm-dd'), NrParagonu, Produkt"),
@@ -19,7 +19,6 @@ shinyUI(fluidPage(
       # przyciski odswiezania raportu
       actionButton("run",label = "Oblicz"),
       actionButton("run1",label = "Wyswietl"),
-      
       
       # zakres dat
       uiOutput("zakres_dat"),
@@ -38,7 +37,7 @@ shinyUI(fluidPage(
       # sposob sortowania regul
       uiOutput("sortowanie"),
     
-      # pobranie produktow z zaladowanego pliku
+      # dobor produkt w celu wyznaczenia powiazan z tym produktem
       uiOutput("produkt"),
       
       br(),
@@ -49,10 +48,12 @@ shinyUI(fluidPage(
       #             value = 15),
       width = 3),
     
-    mainPanel(tabsetPanel(type="tabs",
-                          tabPanel("Reguly", tableOutput("reguly"),
-                                             visNetworkOutput("reguly_wykres")),
-                          tabPanel("Wykres czestosci", plotOutput("frequency",width = "100%", height = "600px")),
-                          tabPanel("Podsumowanie zbioru", verbatimTextOutput("summary")),
-                          tabPanel("Objasnienia", verbatimTextOutput("Objasnienia"))
+    mainPanel(
+      tabsetPanel(
+        type="tabs",
+          tabPanel("Reguly", tableOutput("reguly"),
+                             visNetworkOutput("reguly_wykres")),
+          tabPanel("Wykres czestosci", plotOutput("frequency",width = "100%", height = "600px")),
+          tabPanel("Podsumowanie zbioru", verbatimTextOutput("summary")),
+          tabPanel("Objasnienia", verbatimTextOutput("Objasnienia"))
     )))))
