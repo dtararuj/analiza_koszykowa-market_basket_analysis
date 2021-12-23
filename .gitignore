@@ -6,6 +6,10 @@
 
 */tymczasowy
 
-*.csv
+
 
 *.xlsx
+
+*/rsconnect
+
+*/hierarchia_produktow
