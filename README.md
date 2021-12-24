@@ -43,7 +43,7 @@ Poniżej przykładowe (wygenerowane w sposób losowy) dane jakie uzyskujemy:
 
 a) wykres częstości danego asortymentu we wszystkich paragonach spełniających kryterium analizy (tj. gdzie sa min. 2 transakcje)  
 
-![nazwa](obrazki/item3.jpg) 
+![nazwa](obrazki/item3.JPG) 
 
 b) zestawienie kilku przykladowych reguł
 
