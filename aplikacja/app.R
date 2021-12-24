@@ -3,7 +3,7 @@ library(shiny)
 library(tidyverse)
 library(lubridate)
 library(ggplot2)
-library(RColorBrewer)
+library(RColorBrewer) ###
 library(arules)
 library(arulesViz)
 library(visNetwork) #for html widget
@@ -258,19 +258,20 @@ output$komunikat = renderPrint({
         "2. Gdy dane  sie zaladuja kliknij 'Oblicz',","\n", 
         "3. Po chwili, gdy wyswietla sie wszystkie filtry, ustaw dowolnie parametry i kliknij 'Wyswietl'," ,"\n", 
         "W razie pojawienia sie bledow powtorz krok 2.")
-}})
+}
+  })
 
 
 output$reguly = renderTable({
   if (is.null(top_reguly())){
-    print("Poczekaj az zaladuja sie dane, kliknij oblicz, odczekaj chwile i kliknij wyswietl")
+    return()
   }else{
     inspect(top_reguly())
   }
 })
 
 output$reguly_wykres =  renderVisNetwork({
-  plot(top_reguly(), method = "graph",  engine = "htmlwidget")
+  plot(top_reguly(), method = "graph", engine = "htmlwidget")
 })
 
 
