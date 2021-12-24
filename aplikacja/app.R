@@ -3,7 +3,7 @@ library(shiny)
 library(tidyverse)
 library(lubridate)
 library(ggplot2)
-library(RColorBrewer) ###
+library(RColorBrewer) 
 library(arules)
 library(arulesViz)
 library(visNetwork) #for html widget
@@ -63,7 +63,7 @@ ui = shinyUI(fluidPage(
         tabPanel("Reguly", tableOutput("reguly"),
                  verbatimTextOutput("komunikat"),
                  visNetworkOutput("reguly_wykres")),
-        tabPanel("Wykres czestosci", plotOutput("frequency",width = "100%", height = "600px")),
+        tabPanel("Wykres czestosci", plotOutput("frequency",width = "80%", height = "600px")),
         tabPanel("Podsumowanie zbioru", verbatimTextOutput("summary")),
         tabPanel("Objasnienia", verbatimTextOutput("Objasnienia"))
       )))))
@@ -284,7 +284,7 @@ output$summary = renderPrint({
 output$frequency = renderPlot({
   
   #n = input$TopN   #jezeli chcialbym udostepnic uzytkownikowi modyfikacje tego parametru
-  n = 15
+  n = 10
   
   # ustawiamy marginesy
   #dev.off()
