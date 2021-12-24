@@ -1,4 +1,4 @@
-Sys.setlocale("LC_ALL", "Polish") 
+Sys.setlocale("LC_ALL", "polish")
 library(shiny)
 library(tidyverse)
 library(lubridate)
@@ -101,7 +101,7 @@ zbior_paragonow = reactive({
 ## Wybor poziomu wsparcia reguly
 output$support =  renderUI({
   
-  if(is.null(zbior_paragonow())){
+  if(is.null(grupy())){
     return()
   }else{
     sliderInput("support",
@@ -116,7 +116,7 @@ output$support =  renderUI({
 ## wybor poziomu confidence
 output$confidence =  renderUI({
   
-  if(is.null(zbior_paragonow())){
+  if(is.null(grupy())){
     return()
   }else{
     sliderInput("confidence",
@@ -131,7 +131,7 @@ output$confidence =  renderUI({
 ## wybor ile regul ma wyswietlac
 output$ilosc_regul =  renderUI({
   
-  if(is.null(zbior_paragonow())){
+  if(is.null(grupy())){
     helpText(HTML("<i>Wgraj plik i kliknij Oblicz </i>")) 
   }else{
     numericInput("ilosc_regul",
@@ -143,7 +143,7 @@ output$ilosc_regul =  renderUI({
 ## wybor sposobu sortowania regul
 output$sortowanie =  renderUI({
   
-  if(is.null(zbior_paragonow())){
+  if(is.null(grupy())){
     return()
   }else{
     selectInput("sortowanie",
@@ -255,15 +255,15 @@ output$komunikat = renderPrint({
   if (is.null(zbior_paragonow())){
     cat("Instrukcja:", "\n",
         "1. Wgraj dane","\n",
-        "2. Gdy dane sie zaladuja kliknij 'Oblicz',","\n", 
-        "3. Po chwili, kliknij 'Wyswietl'," ,"\n", 
+        "2. Gdy dane  sie zaladuja kliknij 'Oblicz',","\n", 
+        "3. Po chwili, gdy wyswietla sie wszystkie filtry, ustaw dowolnie parametry i kliknij 'Wyswietl'," ,"\n", 
         "W razie pojawienia sie bledow powtorz krok 2.")
 }})
 
 
 output$reguly = renderTable({
   if (is.null(top_reguly())){
-    return()
+    print("Poczekaj az zaladuja sie dane, kliknij oblicz, odczekaj chwile i kliknij wyswietl")
   }else{
     inspect(top_reguly())
   }
