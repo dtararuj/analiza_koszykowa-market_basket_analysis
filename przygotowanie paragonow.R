@@ -34,6 +34,12 @@ hierarchia_2 = hierarchia_1 %>% mutate(Produkt = paste(Departament, ": ", Grupa)
 # polaczenie paragonow i hierarchii
 paragony_hierarchia = dane1 %>% left_join(hierarchia_2, by = "KodProduktu") %>% select(-KodProduktu)
 
+# parsowanie daty do formaty yyyy-mm-dd
+paragony_hierarchia$Data = as.Date(paragony_hierarchia$Data, "%d.%m.%Y")
+
+
+
+
 # zapisanie CSV - jako plik wsadowy do aplikacji
 write.csv(paragony_hierarchia, "paragony.csv",row.names = FALSE)
 

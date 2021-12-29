@@ -8,6 +8,7 @@ library(arules)
 library(arulesViz)
 library(visNetwork) #for html widget
 
+options(shiny.maxRequestSize = 200*1024^2) #zwiekszenie dopuszczalnej wielkosci pliku wsadowego
 
 ui = shinyUI(fluidPage(
   titlePanel(title =h2("Analiza koszykowa", align ='center')),
