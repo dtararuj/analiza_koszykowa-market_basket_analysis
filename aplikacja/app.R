@@ -304,9 +304,10 @@ output$Objasnienia = renderPrint({
   cat("Slowniczek pojec:", "\n",
       "# items - ilosc kategorii produktowych,", "\n", 
       "# transaction - ilosc paragonow w zbiorze,", "\n", 
-      "# support - udzial danej pary produktow we wszystkich paragonach,", "\n", 
-      "# confidence - prawdopodobienstwo dobrania danego produktu jako druga rzecz na paragonie (jak często towar A jest kupowany z towarem B),", "\n", 
-      "# lift - jak zakup produktu A wplywa od zakupu produktu B (o ile czesciej zostanie kupiony produkt B, po zakupie A)", "\n",
+      "# coverege - prawdopodobienstwo wystapienia paragonu z produktem A w calosci paragonow,", "\n",
+      "# support - udzial danej pary produktow we wszystkich paragonach,", "\n",
+      "# confidence - prawdopodobienstwo dobrania danego produktu jako druga rzecz na paragonie (jak często towar B jest kupowany, jak kupujemy towar A),", "\n", 
+      "# lift - jak zakup produktu A wplywa od zakupu produktu B (Jak zwieksza sie szansa zakupu towaru B, gdy klient kupi towar A, w porownaniu gdy mialby kupic w ogole ten towar)", "\n",
       "Mozemy mowic o zaleznosci jedynie przy lift > 1,", "\n",
       "# count - ilosc wystapien danej pary transakcji."
   )
